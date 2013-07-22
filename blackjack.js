@@ -1,7 +1,8 @@
 /* "Globals" */
 var doesDealerHitOnSoft17 = true;
 
-console.log(shouldPlayerHit(6, 'a', 6, true));
+//console.log(shouldPlayerHit(6, 'a', 6, true));
+//console.log(shouldDealerHit(17, false));
 
 /*
  Initially playerCard1 and playerCard2 are the first two cards received.
@@ -55,9 +56,9 @@ function shouldPlayerHitOnTotal(pcvalue, dcshown, isSoft) {
 
 //Define the dealer rules
 function shouldDealerHit(dcvalue, isSoft17) {
-    if (dcvalue <= 16) return true;
-    else if (dcvalue == 17 && isSoft17) return true;
-    else return true;
+    if (dcvalue == 17 && isSoft17) return true;
+    else if (dcvalue <= 16) return true;
+    else return false;
 }
 
 function doesDealerShowAce(card) {
