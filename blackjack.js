@@ -10,8 +10,9 @@ var minbet = 5;
 var shouldModifyBet = false;
 var probModifier = 0.4;
 var modifier = 3;
-var numPlayers = 1;
-var numTrials = 24000;
+var numPlayers = 6;
+var numBadPlayers = 0;
+var numTrials = 10000;
 var deck = ['a', 'a', 'a', 'a',
             2, 2, 2, 2, 3, 3, 3, 3,
             4, 4, 4, 4, 5, 5, 5, 5,
@@ -31,7 +32,7 @@ var playerRulePreferences = {
     hitOnSoft17 : true
 };
 var badPlayerRulePreferences = {
-    dealerShows7 : 15,
+    dealerShows7 : 12,
     hitOnSoft17 : false
 };
             
@@ -47,25 +48,23 @@ function initGlobals() {
     }
 }
 
-function resetDeck() {
-    deck = [];
+function reset() {
+    deck = new Array(52);
     for (var i = 0; i < newDeck.length; i++) {
-        deck.push(newDeck[i]);
+        deck[i] = newDeck[i];
+    }
+    players = new Array(numPlayers);
+    dealerHand = [];
+    for (var i = 0; i < numPlayers; i++) {
+        var playerHandArr = [];
+        players[i] = playerHandArr;
     }
 }
 
 function letsPlay(numTrials, numPlayers) {
     for (var trials = 0; trials < numTrials; trials++) {
-        resetDeck();
-        players = [];
-        dealerHand = [];
-        for (var i = 0; i < numPlayers; i++) {
-            var playerHandArr = [];
-            players.push(playerHandArr);
-        }
+        reset();
         firstDeal(numPlayers);
-        //console.log(players);
-        //console.log(dealerHand);
         
         var dealerShownCard = dealerHand[0];
         //If dealer gets blackjack on first two cards
@@ -78,7 +77,7 @@ function letsPlay(numTrials, numPlayers) {
         //Hits by players in turn
         for (var i = 0; i < numPlayers; i++) {
             var prefs = playerRulePreferences;
-            //if (i >= numPlayers - 2) prefs = badPlayerRulePreferences;
+            if (i >= numPlayers - numBadPlayers) prefs = badPlayerRulePreferences;
             var playerHand = players[i];
             var shouldPlayerHit = shouldPlayerHitOnTotal(playerOptimalHandTotal(playerHand), dealerShownCard, playerSoftAceCheck(playerHand), prefs);
             while (shouldPlayerHit) {
